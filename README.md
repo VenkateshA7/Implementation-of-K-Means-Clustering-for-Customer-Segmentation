@@ -22,59 +22,61 @@ Developed by: Venkatesh A
 RegisterNumber: 212225040485 
 */
 import pandas as pd
-import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.metrics.pairwise import euclidean_distances
 import matplotlib.pyplot as plt
-data = pd.read_csv("/content/Mall_Customers.csv")
-data
-X = data[['Annual Income (k$)' , 'Spending Score (1-100)']]
-X
-plt.figure(figsize=(4,4))
-plt.scatter(data['Annual Income (k$)'], data['Spending Score (1-100)'])
+from sklearn.cluster import KMeans
+
+# ------------------------------
+# Step 1: Sample dataset
+# ------------------------------
+data = {
+    'CustomerID': [1,2,3,4,5,6,7,8,9,10],
+    'Gender': ['Male','Female','Female','Male','Female','Male','Male','Female','Female','Male'],
+    'Age': [19,21,20,23,31,22,35,30,25,28],
+    'Annual Income (k$)': [15,16,17,18,19,20,21,22,23,24],
+    'Spending Score (1-100)': [39,81,6,77,40,76,6,94,3,72]
+}
+
+df = pd.DataFrame(data)
+
+# ------------------------------
+# Step 2: Select features for clustering
+# ------------------------------
+X = df[['Annual Income (k$)', 'Spending Score (1-100)']]
+
+# ------------------------------
+# Step 3: Apply K-Means (choose clusters, e.g., 3)
+# ------------------------------
+kmeans = KMeans(n_clusters=3, init='k-means++', random_state=42)
+df['Cluster'] = kmeans.fit_predict(X)  # Automatically fits and assigns clusters
+
+# ------------------------------
+# Step 4: Visualize clusters
+# ------------------------------
+plt.figure(figsize=(8,6))
+for i in range(3):
+    plt.scatter(X[df['Cluster']==i]['Annual Income (k$)'],
+                X[df['Cluster']==i]['Spending Score (1-100)'],
+                label=f'Cluster {i+1}')
+
+# Plot centroids
+plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1],
+            s=200, c='yellow', label='Centroids', marker='X')
+
+plt.title('Customer Segmentation (K-Means)')
 plt.xlabel('Annual Income (k$)')
-plt.ylabel("Spending Score (1-100)")
-plt.show()
-k = 5
-kmeans = KMeans(n_clusters=k)
-kmeans.fit(X)
-centroids = kmeans.cluster_centers_
-labels = kmeans.labels_
-print("Centroids: ")
-print(centroids)
-print("Label:")
-# define colors for each cluster
-colors = ['r', 'g', 'b', 'c', 'm']
-
-# plotting the controls
-for i in range(k):
-  cluster_points = X[labels == i]
-  plt.scatter(cluster_points['Annual Income (k$)'], cluster_points['Spending Score (1-100)'], color=colors[i], label=f'Cluster {i+1}')
-
-  #Find minimum enclosing circle
-  distances = euclidean_distances(cluster_points, [centroids[i]])
-  radius = np.max(distances)
-
-  circle = plt.Circle(centroids[i], radius, color=colors[i], fill=False)
-  plt.gca().add_patch(circle)
-
-#Plotting the centroids
-plt.scatter(centroids[:, 0], centroids[:, 1], marker='o', s=200, color='k', label='Centroids')
-
-plt.title('K-means Clustering')
-plt.xlabel("Annual Income (k$)")
 plt.ylabel('Spending Score (1-100)')
 plt.legend()
-plt.grid(True)
-plt.axis('equal') 
 plt.show()
+
+# ------------------------------
+# Step 5: Show dataset with clusters
+# ------------------------------
+print(df)
 ```
 
 ## Output:
 ![K Means Clustering for Customer Segmentation](sam.png)
-<img width="603" height="559" alt="image" src="https://github.com/user-attachments/assets/7cade023-ab12-43a9-a887-bcf4a60211a5" />
-<img width="884" height="366" alt="image" src="https://github.com/user-attachments/assets/85c3e218-dd1b-4116-aa12-6eb45cf59d36" />
-<img width="903" height="654" alt="image" src="https://github.com/user-attachments/assets/13da2a93-22f5-4135-a093-3ef1218b2894" />
+<img width="868" height="689" alt="image" src="https://github.com/user-attachments/assets/4c6ed2a9-0b62-4359-9a9e-041cd9e1838e" />
 
 
 
