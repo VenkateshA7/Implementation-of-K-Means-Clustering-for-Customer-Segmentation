@@ -77,6 +77,7 @@ print(df)
 ## Output:
 ![K Means Clustering for Customer Segmentation](sam.png)
 <img width="868" height="689" alt="image" src="https://github.com/user-attachments/assets/4c6ed2a9-0b62-4359-9a9e-041cd9e1838e" />
+<img width="746" height="573" alt="image" src="https://github.com/user-attachments/assets/7e69ea73-cd31-4f65-9d02-8d021ac31cec" />
 
 
 
